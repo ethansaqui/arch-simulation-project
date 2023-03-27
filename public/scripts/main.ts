@@ -1,3 +1,4 @@
+import { parse } from "path";
 
 const convertButton = document.getElementById('convertButton') as HTMLInputElement;
 const baseSelect = document.getElementById('baseSelect') as HTMLInputElement;
@@ -43,6 +44,17 @@ function extractSign(mantissa : string) : string {
     return "0";
 }
 
+function convertExponentToBinary(value: string) : string {
+    console.log(parseInt(value))
+    var result = parseInt(value) + 1023;
+    console.log(result)
+    var binary = result.toString(2);
+    while(binary.length < 11) {
+        binary = "0" + binary;
+    }
+    return binary;
+}
+
 function normalizeMantissa(floatingPoint : Array<string>) {
     const mantissa = floatingPoint[2];
     var firstOnePosition = mantissa.indexOf('1');
@@ -51,15 +63,13 @@ function normalizeMantissa(floatingPoint : Array<string>) {
     if(firstOnePosition < radixPointPosition) {
         firstOnePosition++;
 
-        floatingPoint[1] = (parseInt(floatingPoint[1]) - (radixPointPosition - firstOnePosition)).toString();
+        floatingPoint[1] = (parseInt(floatingPoint[1]) + (radixPointPosition - firstOnePosition)).toString();
     }
     else
-        floatingPoint[1] = (parseInt(floatingPoint[1]) + (firstOnePosition - radixPointPosition)).toString();
+        floatingPoint[1] = (parseInt(floatingPoint[1]) - (firstOnePosition - radixPointPosition)).toString();
         
 
     var result = mantissa.split('');
-    
-    console.log(firstOnePosition," ", radixPointPosition)
 
     result.splice(radixPointPosition, 1);
     result.splice(firstOnePosition, 0, '.');
@@ -69,8 +79,28 @@ function normalizeMantissa(floatingPoint : Array<string>) {
     }
     
     floatingPoint[2] = result.join('');
+
+    while(floatingPoint[2].length < 53) {    
+        floatingPoint[2] += "0";
+    }
 }
 
+function updateResult(floatingPoint : Array<string>) {
+    const sign = floatingPoint[0];
+    const exponent = floatingPoint[1];
+    const mantissa = floatingPoint[2];
+
+    const signBit = document.getElementById('signBit') as HTMLInputElement;
+    const exponentBits = document.getElementById('exponentBits') as HTMLInputElement;
+    const mantissaBits = document.getElementById('mantissaBits') as HTMLInputElement;
+    const hexResult = document.getElementById('hexResult') as HTMLInputElement;
+
+    signBit.value = sign;
+    exponentBits.value = exponent;
+    mantissaBits.value = mantissa.split('.')[1];
+    console.log((sign + exponent + mantissa.split('.')[1], 2))
+    hexResult.value = "0x" + parseInt(sign + exponent + mantissa.split('.')[1], 2).toString(16);
+}
 
 export default function convertToFloat64(mantissa : string, exponent : string, base : number) : string {
     const sign = extractSign(mantissa);
@@ -85,7 +115,11 @@ export default function convertToFloat64(mantissa : string, exponent : string, b
 
     if (base == 2) {
         normalizeMantissa(floatingPoint);
+        floatingPoint[1] = convertExponentToBinary(floatingPoint[1]);
         console.log(floatingPoint);
+        updateResult(floatingPoint);
     }
+
+
     return "0";
 }
