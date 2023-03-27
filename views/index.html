@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/output.css" rel="stylesheet">
     <title>Simulation</title>
     
 </head>
@@ -20,6 +21,21 @@
         </select>
         <input type="" id="exponentInput" placeholder="Enter an exponent" inputmode="numeric">
     </span>
+    <button id="convertButton" type="submit">Convert</button>
+
+    <h2 id="outputText">Output</h2>
+    <div>
+        <h3>Binary Result</h3>
+        Sign Bit 
+        <input id="signBit" readonly/>
+        <input id="exponentBits" readonly/>
+        <input id="mantissaBits" readonly/>
+
+        <h3>Hexadecimal Result</h3> 
+        <input id="signHex" readonly/>
+        <input id="exponentHex" readonly/>
+        <input id="mantissaHex" readonly/>
+    </div>
     <script src="/scripts/main.js"></script>
 </body>
 </html>
