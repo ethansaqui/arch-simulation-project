@@ -26,16 +26,26 @@
     <h2 id="outputText">Output</h2>
     <div>
         <h3>Binary Result</h3>
-        Sign Bit 
-        <input id="signBit" readonly/>
-        <input id="exponentBits" readonly/>
-        <input id="mantissaBits" readonly/>
-
+        <span class="flex flex-row borders border-black ">
+            <div>
+                Sign Bit <br>
+                <input id="signBit" readonly/>
+            </div> 
+            <div>
+                Exponent Bits <br>
+                <input id="exponentBits" readonly/>
+            </div>     
+            <div>
+                Mantissa Bits <br>
+                <input id="mantissaBits" readonly/>
+            </div>
+        </span>
         <h3>Hexadecimal Result</h3> 
         <input id="signHex" readonly/>
         <input id="exponentHex" readonly/>
         <input id="mantissaHex" readonly/>
     </div>
+    <script>var exports = {};</script>
     <script src="/scripts/main.js"></script>
 </body>
 </html>
