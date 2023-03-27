@@ -2,10 +2,13 @@ import express from "express"
 
 const app = express();
 
-app.use(express.static('public\\html'));
+app.use(express.static('dist/public'));
+console.log();
+
+const dirname = __dirname.split("\\").slice(0, -1).join("\\")
 
 app.get("/", (req, res) => {
-    res.sendFile(__dirname + "\\index.html");
+    res.sendFile(dirname + "/views/index.html");
     }
 );
 
