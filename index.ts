@@ -2,7 +2,7 @@ import express from "express"
 
 const app = express();
 
-app.use(express.static('public'));
+app.use(express.static('public\\html'));
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "\\index.html");
