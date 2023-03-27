@@ -80,15 +80,28 @@ function normalizeMantissa(floatingPoint : Array<string>) {
     
     floatingPoint[2] = result.join('');
 
-    while(floatingPoint[2].length < 53) {    
+    while(floatingPoint[2].length < 54) {    
         floatingPoint[2] += "0";
     }
+}
+
+function split4Bits(value : string) : Array<string> {
+    var result = [];
+    for(var i = 0; i < value.length; i += 4) {
+        result.push(value.slice(i, i + 4));
+    }
+    return result;
+}
+
+function convertToHex(value : string) : string {
+    return parseInt(value, 2).toString(16);
 }
 
 function updateResult(floatingPoint : Array<string>) {
     const sign = floatingPoint[0];
     const exponent = floatingPoint[1];
     const mantissa = floatingPoint[2];
+    const float64 = sign + exponent + mantissa.split('.')[1];
 
     const signBit = document.getElementById('signBit') as HTMLInputElement;
     const exponentBits = document.getElementById('exponentBits') as HTMLInputElement;
@@ -98,8 +111,8 @@ function updateResult(floatingPoint : Array<string>) {
     signBit.value = sign;
     exponentBits.value = exponent;
     mantissaBits.value = mantissa.split('.')[1];
-    console.log((sign + exponent + mantissa.split('.')[1], 2))
-    hexResult.value = "0x" + parseInt(sign + exponent + mantissa.split('.')[1], 2).toString(16);
+    
+    hexResult.value = "0x" + split4Bits(float64).map(convertToHex).join('').toUpperCase();
 }
 
 export default function convertToFloat64(mantissa : string, exponent : string, base : number) : string {
