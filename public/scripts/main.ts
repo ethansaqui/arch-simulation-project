@@ -6,17 +6,19 @@ const exponentInput = document.getElementById('exponentInput') as HTMLInputEleme
 
 baseSelect.addEventListener('change', handleBaseSelectChange);
 
+function inputDisabled(value : boolean) {
+    binaryInput.disabled = value;
+    exponentInput.disabled = value;
+}
+
 function handleBaseSelectChange() {
-    binaryInput.disabled = false;
-    exponentInput.disabled = false;
+    inputDisabled(false);
     if(baseSelect.value == '2')
         binaryInput.placeholder="Enter a binary mantissa"
     else if(baseSelect.value == '10')
         binaryInput.placeholder="Enter a decimal mantissa"
     else {
         binaryInput.placeholder="NaN"
-        binaryInput.disabled = true;
-        exponentInput.disabled = true;
-    }
-        
+        inputDisabled(true);
+    }   
 }
