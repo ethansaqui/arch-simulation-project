@@ -7,20 +7,20 @@ const exponentInput = document.getElementById('exponentInput') as HTMLInputEleme
 
 baseSelect.addEventListener('change', handleBaseSelectChange);
 
-function inputReadOnly(value : boolean) {
+function changeReadOnly(value : boolean) {
     binaryInput.readOnly = value;
     exponentInput.readOnly = value; 
 }
 
 function handleBaseSelectChange() {
-    inputReadOnly(false);
+    changeReadOnly(false);
     if(baseSelect.value == '2')
         binaryInput.placeholder="Enter a binary mantissa"
     else if(baseSelect.value == '10')
         binaryInput.placeholder="Enter a decimal mantissa"
     else {
         binaryInput.placeholder="NaN"
-        inputReadOnly(true);
+        changeReadOnly(true);
     }   
 }
 
@@ -44,6 +44,46 @@ function extractSign(mantissa : string) : string {
     return "0";
 }
 
+
+function convertDecimalToBinary(floatingPoint : Array<string>) {
+    const mantissa = floatingPoint[2];
+    const exponent = floatingPoint[1];
+
+    // multiply exponent and mantissa and keep the decimal point
+    const normalizedMantissa = (parseFloat(mantissa) * Math.pow(10, parseInt(exponent))).toString();
+
+    // separate mantissa into 2 parts: 1 after the decimal point and 1 before the decimal point
+    const mantissaParts = normalizedMantissa.split('.');
+    const beforeDecimalPoint = mantissaParts[0];
+    const afterDecimalPoint = mantissaParts[1];
+
+    // convert the after decimal point part to binary as a fraction
+    var afterDecimalPointBinary = "";
+    var afterDecimalPointValue = parseFloat("0." + afterDecimalPoint);
+    while(afterDecimalPointValue > 0) {
+        afterDecimalPointValue *= 2;
+        if(afterDecimalPointValue >= 1) {
+            afterDecimalPointBinary += "1";
+            afterDecimalPointValue -= 1;
+        }
+        else
+            afterDecimalPointBinary += "0";
+    }
+
+    // convert the before decimal point part to binary
+    var beforeDecimalPointBinary = "";
+    var beforeDecimalPointValue = parseInt(beforeDecimalPoint);
+    while(beforeDecimalPointValue > 0) {
+        beforeDecimalPointBinary = (beforeDecimalPointValue % 2).toString() + beforeDecimalPointBinary;
+        beforeDecimalPointValue = Math.floor(beforeDecimalPointValue / 2);
+    }
+
+    // combine the 2 parts
+    var result = beforeDecimalPointBinary + "." + afterDecimalPointBinary;
+    floatingPoint[2] = result;
+    floatingPoint[1] = "0"
+}
+
 function convertExponentToBinary(value: string) : string {
     console.log(parseInt(value))
     var result = parseInt(value) + 1023;
@@ -57,6 +97,7 @@ function convertExponentToBinary(value: string) : string {
 
 function normalizeMantissa(floatingPoint : Array<string>) {
     const mantissa = floatingPoint[2];
+    const exponent = floatingPoint[1];
     var firstOnePosition = mantissa.indexOf('1');
     const radixPointPosition = mantissa.indexOf('.');
 
@@ -83,6 +124,9 @@ function normalizeMantissa(floatingPoint : Array<string>) {
     while(floatingPoint[2].length < 54) {    
         floatingPoint[2] += "0";
     }
+
+    console.log(floatingPoint[2])
+    console.log(floatingPoint[1])
 }
 
 function split4Bits(value : string) : Array<string> {
@@ -132,7 +176,13 @@ export default function convertToFloat64(mantissa : string, exponent : string, b
         console.log(floatingPoint);
         updateResult(floatingPoint);
     }
-
+    else if (base == 10) {
+        convertDecimalToBinary(floatingPoint);
+        normalizeMantissa(floatingPoint);
+        floatingPoint[1] = convertExponentToBinary(floatingPoint[1]);
+        console.log(floatingPoint);
+        updateResult(floatingPoint);
+    }
 
     return "0";
 }
