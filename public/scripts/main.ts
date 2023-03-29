@@ -1,4 +1,9 @@
-import { parse } from "path";
+interface FloatingPoint {
+    sign : string;
+    exponent : string;
+    mantissa : string;
+    base: number;
+}
 
 const convertButton = document.getElementById('convertButton') as HTMLInputElement;
 const baseSelect = document.getElementById('baseSelect') as HTMLInputElement;
@@ -7,20 +12,20 @@ const exponentInput = document.getElementById('exponentInput') as HTMLInputEleme
 
 baseSelect.addEventListener('change', handleBaseSelectChange);
 
-function changeReadOnly(value : boolean) {
+function changeReadOnlyValue(value : boolean) {
     binaryInput.readOnly = value;
     exponentInput.readOnly = value; 
 }
 
 function handleBaseSelectChange() {
-    changeReadOnly(false);
+    changeReadOnlyValue(false);
     if(baseSelect.value == '2')
         binaryInput.placeholder="Enter a binary mantissa"
     else if(baseSelect.value == '10')
         binaryInput.placeholder="Enter a decimal mantissa"
     else {
         binaryInput.placeholder="NaN"
-        changeReadOnly(true);
+        changeReadOnlyValue(true);
     }   
 }
 
@@ -36,22 +41,43 @@ function handleConvertButtonClick() {
         console.log("NaN");
 }
 
-/* since we're using ordinary ts, we can't use export or require due to it using commonJS for compilation making us need
-to install webpack, so im just putting the conversion code here*/
 function extractSign(mantissa : string) : string {
     if(mantissa[0] == '-') 
         return "1"
     return "0";
 }
 
+function normalizeDecimalPoint(mantissa: string, exponent: string) : string {
+// shift decimal point based on exponent
+    var result = mantissa;
+    var radixPointPosition = result.indexOf('.');
+    var exponentValue = parseInt(exponent);
+    var resLength = result.length;
+    while(exponentValue > 0) {
+        if(radixPointPosition + exponentValue >= resLength) {
+            result += "0";
+        }
+        exponentValue--;
+    }
+    while(exponentValue < 0) {
+        if(radixPointPosition + exponentValue < 0) {
+            result = "0" + result;
+        }
+        exponentValue++;
+    }
 
-function convertDecimalToBinary(floatingPoint : Array<string>) {
-    const mantissa = floatingPoint[2];
-    const exponent = floatingPoint[1];
+    var resultArr = result.split('');
+    resultArr.splice(radixPointPosition, 1);
+    radixPointPosition += parseInt(exponent);
+    resultArr.splice(radixPointPosition, 0, '.');
+    return resultArr.join('');
+}
 
-    // multiply exponent and mantissa and keep the decimal point
-    const normalizedMantissa = (parseFloat(mantissa) * Math.pow(10, parseInt(exponent))).toString();
+function convertDecimalToBinary(input: FloatingPoint) : FloatingPoint {
+    const mantissa = input.mantissa;
+    const exponent = input.exponent;
 
+    const normalizedMantissa = normalizeDecimalPoint(mantissa, exponent);
     // separate mantissa into 2 parts: 1 after the decimal point and 1 before the decimal point
     const mantissaParts = normalizedMantissa.split('.');
     const beforeDecimalPoint = mantissaParts[0];
@@ -59,7 +85,8 @@ function convertDecimalToBinary(floatingPoint : Array<string>) {
 
     // convert the after decimal point part to binary as a fraction
     var afterDecimalPointBinary = "";
-    var afterDecimalPointValue = parseFloat("0." + afterDecimalPoint);
+    var afterDecimalPointValue = parseInt(afterDecimalPoint) / Math.pow(10, afterDecimalPoint.length);
+
     while(afterDecimalPointValue > 0) {
         afterDecimalPointValue *= 2;
         if(afterDecimalPointValue >= 1) {
@@ -80,8 +107,10 @@ function convertDecimalToBinary(floatingPoint : Array<string>) {
 
     // combine the 2 parts
     var result = beforeDecimalPointBinary + "." + afterDecimalPointBinary;
-    floatingPoint[2] = result;
-    floatingPoint[1] = "0"
+    return {sign: input.sign,
+            exponent: "0",
+            mantissa: result,
+            base: input.base} as FloatingPoint;
 }
 
 function convertExponentToBinary(value: string) : string {
@@ -95,19 +124,19 @@ function convertExponentToBinary(value: string) : string {
     return binary;
 }
 
-function normalizeMantissa(floatingPoint : Array<string>) {
-    const mantissa = floatingPoint[2];
-    const exponent = floatingPoint[1];
+function normalizeMantissa(input : FloatingPoint) : FloatingPoint {
+    var mantissa = input.mantissa;
+    var exponent = input.exponent;
     var firstOnePosition = mantissa.indexOf('1');
     const radixPointPosition = mantissa.indexOf('.');
 
     if(firstOnePosition < radixPointPosition) {
         firstOnePosition++;
 
-        floatingPoint[1] = (parseInt(floatingPoint[1]) + (radixPointPosition - firstOnePosition)).toString();
+        exponent = (parseInt(exponent) + (radixPointPosition - firstOnePosition)).toString();
     }
     else
-        floatingPoint[1] = (parseInt(floatingPoint[1]) - (firstOnePosition - radixPointPosition)).toString();
+        exponent = (parseInt(exponent) - (firstOnePosition - radixPointPosition)).toString();
         
 
     var result = mantissa.split('');
@@ -119,17 +148,19 @@ function normalizeMantissa(floatingPoint : Array<string>) {
         result = result.slice(0, 53);
     }
     
-    floatingPoint[2] = result.join('');
+    mantissa = result.join('');
 
-    while(floatingPoint[2].length < 54) {    
-        floatingPoint[2] += "0";
+    while(mantissa.length < 54) {    
+        mantissa += "0";
     }
 
-    console.log(floatingPoint[2])
-    console.log(floatingPoint[1])
+    return {sign: input.sign, 
+            exponent: exponent, 
+            mantissa: mantissa, 
+            base: input.base} as FloatingPoint;
 }
 
-function split4Bits(value : string) : Array<string> {
+function splitToNibbles(value : string) : Array<string> {
     var result = [];
     for(var i = 0; i < value.length; i += 4) {
         result.push(value.slice(i, i + 4));
@@ -137,14 +168,15 @@ function split4Bits(value : string) : Array<string> {
     return result;
 }
 
-function convertToHex(value : string) : string {
-    return parseInt(value, 2).toString(16);
+function convertToHex(float64 : string) : string {
+    var result = splitToNibbles(float64)
+    return "0x" + result.map((nibble) => parseInt(nibble, 2).toString(16)).join('').toUpperCase();
 }
 
-function updateResult(floatingPoint : Array<string>) {
-    const sign = floatingPoint[0];
-    const exponent = floatingPoint[1];
-    const mantissa = floatingPoint[2];
+function displayResults(floatingPoint : FloatingPoint) {
+    const sign = floatingPoint.sign;
+    const exponent = floatingPoint.exponent;
+    const mantissa = floatingPoint.mantissa;
     const float64 = sign + exponent + mantissa.split('.')[1];
 
     const signBit = document.getElementById('signBit') as HTMLInputElement;
@@ -155,12 +187,11 @@ function updateResult(floatingPoint : Array<string>) {
     signBit.value = sign;
     exponentBits.value = exponent;
     mantissaBits.value = mantissa.split('.')[1];
-    
-    hexResult.value = "0x" + split4Bits(float64).map(convertToHex).join('').toUpperCase();
+    hexResult.value = convertToHex(float64);
 }
 
 export default function convertToFloat64(mantissa : string, exponent : string, base : number) : string {
-    const sign = extractSign(mantissa);
+    const sign = extractSign(binaryInput.value);
 
     console.log(
         "Sign: " + sign + "\n" +
@@ -168,21 +199,24 @@ export default function convertToFloat64(mantissa : string, exponent : string, b
         "Exponent: " + exponent + "\n" +
         "Base: " + base + "\n"
     )
-    const floatingPoint = [sign, exponent, mantissa]
+    const input = {
+        sign: sign,
+        mantissa: mantissa,
+        exponent: exponent,
+        base: base
+    }
 
-    if (base == 2) {
-        normalizeMantissa(floatingPoint);
-        floatingPoint[1] = convertExponentToBinary(floatingPoint[1]);
-        console.log(floatingPoint);
-        updateResult(floatingPoint);
-    }
-    else if (base == 10) {
-        convertDecimalToBinary(floatingPoint);
-        normalizeMantissa(floatingPoint);
-        floatingPoint[1] = convertExponentToBinary(floatingPoint[1]);
-        console.log(floatingPoint);
-        updateResult(floatingPoint);
-    }
+    var result : FloatingPoint;
+    if (base == 2)
+        result = normalizeMantissa(input);
+    else if (base == 10) 
+        result = convertDecimalToBinary(input);
+    else
+        result = {sign: "0", mantissa: "0", exponent: "0", base: NaN} as FloatingPoint;
+
+    result = normalizeMantissa(result);
+    result.exponent = convertExponentToBinary(result.exponent);
+    displayResults(result);
 
     return "0";
 }
