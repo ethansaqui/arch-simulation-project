@@ -195,18 +195,41 @@ function displayResults(floatingPoint : FloatingPoint) {
     hexResult.value = convertToHex(float64);
 }
 
+function denormalizeMantissa(input : FloatingPoint) : FloatingPoint {
+    let result = input;
+    let exponent = parseInt(result.exponent);
+
+    result.exponent = "-1023";
+    while (exponent < -1023) {
+        result.mantissa = "0" + result.mantissa;
+        exponent++;
+    }
+    result.mantissa = result.mantissa.slice(0, 53);
+    
+    result.mantissa = result.mantissa.split('.').join('');
+    result.mantissa = "0." + result.mantissa;
+
+    return result;
+}
+
 function handleSpecialCases(result : FloatingPoint) : FloatingPoint {
-    // Case 1: Zero
+    // Case 1: Pure Zero
     if (result.mantissa.indexOf('1') == -1){
         result.exponent = "-1023";
     }
-    // Case 2: Infinity
+
+    // Case 2: Denormalized
+    else if (parseInt(result.exponent) < -1023) {
+        result = denormalizeMantissa(result);
+    }
+
+    // Case 3: Infinity
     else if (parseInt(result.exponent) > 1023) {
         result.exponent = "1024";
         result.mantissa = "1.0";
         result = normalizeBinaryMantissa(result);
     }
-    // Case 3: NaN
+    // Case 4: NaN
     if (Number.isNaN(result.base)){
         result.exponent = "1024";
         result.mantissa = "1.10";    // Assume qNAN
