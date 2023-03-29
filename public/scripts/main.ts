@@ -195,6 +195,26 @@ function displayResults(floatingPoint : FloatingPoint) {
     hexResult.value = convertToHex(float64);
 }
 
+function handleSpecialCases(result : FloatingPoint) : FloatingPoint {
+    // Case 1: Zero
+    if (result.mantissa.indexOf('1') == -1){
+        result.exponent = "-1023";
+    }
+    // Case 2: Infinity
+    else if (parseInt(result.exponent) > 1023) {
+        result.exponent = "1024";
+        result.mantissa = "1.0";
+        result = normalizeBinaryMantissa(result);
+    }
+    // Case 3: NaN
+    if (Number.isNaN(result.base)){
+        result.exponent = "1024";
+        result.mantissa = "1.10";    // Assume qNAN
+        result = normalizeBinaryMantissa(result);
+    }    
+    return result;
+}
+
 export default function convertToFloat64(mantissa : string, exponent : string, base : number) : string {
     const sign = extractSign(binaryInput.value);
 
@@ -224,6 +244,8 @@ export default function convertToFloat64(mantissa : string, exponent : string, b
         result = {sign: "0", mantissa: "0", exponent: "0", base: NaN} as FloatingPoint;
 
     result = normalizeBinaryMantissa(result);
+    result = handleSpecialCases(result);
+    console.log(result);
     result.exponent = convertExponentToBinary(result.exponent);
     displayResults(result);
 
