@@ -46,17 +46,41 @@ function extractSign(mantissa : string) : string {
 
 
 function convertDecimalToBinary(floatingPoint : Array<string>) {
-    var mantissa = floatingPoint[2];
-    var exponent = floatingPoint[1];
+    const mantissa = floatingPoint[2];
+    const exponent = floatingPoint[1];
 
     // multiply exponent and mantissa and keep the decimal point
-    const normalizedMantissa = (parseFloat(mantissa) * Math.pow(10, parseInt(exponent))).toString(2);
-    
-    if(normalizedMantissa.indexOf('.') == -1) {
-        console.log(normalizedMantissa)
-        floatingPoint[2] = normalizedMantissa + ".0";
+    const normalizedMantissa = (parseFloat(mantissa) * Math.pow(10, parseInt(exponent))).toString();
+
+    // separate mantissa into 2 parts: 1 after the decimal point and 1 before the decimal point
+    const mantissaParts = normalizedMantissa.split('.');
+    const beforeDecimalPoint = mantissaParts[0];
+    const afterDecimalPoint = mantissaParts[1];
+
+    // convert the after decimal point part to binary as a fraction
+    var afterDecimalPointBinary = "";
+    var afterDecimalPointValue = parseFloat("0." + afterDecimalPoint);
+    while(afterDecimalPointValue > 0) {
+        afterDecimalPointValue *= 2;
+        if(afterDecimalPointValue >= 1) {
+            afterDecimalPointBinary += "1";
+            afterDecimalPointValue -= 1;
+        }
+        else
+            afterDecimalPointBinary += "0";
     }
 
+    // convert the before decimal point part to binary
+    var beforeDecimalPointBinary = "";
+    var beforeDecimalPointValue = parseInt(beforeDecimalPoint);
+    while(beforeDecimalPointValue > 0) {
+        beforeDecimalPointBinary = (beforeDecimalPointValue % 2).toString() + beforeDecimalPointBinary;
+        beforeDecimalPointValue = Math.floor(beforeDecimalPointValue / 2);
+    }
+
+    // combine the 2 parts
+    var result = beforeDecimalPointBinary + "." + afterDecimalPointBinary;
+    floatingPoint[2] = result;
     floatingPoint[1] = "0"
 }
 
