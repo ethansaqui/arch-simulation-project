@@ -274,3 +274,15 @@ export default function convertToFloat64(mantissa : string, exponent : string, b
 
     return "0";
 }
+
+function copyToClipboard(source : string) {
+    const sourceText = document.getElementById(source) as HTMLInputElement;
+
+    navigator.clipboard.writeText(sourceText.innerText)
+      .then(() => {
+        console.log('Text copied to clipboard');
+      })
+      .catch(err => {
+        console.error('Error copying text: ', err);
+      });
+  }

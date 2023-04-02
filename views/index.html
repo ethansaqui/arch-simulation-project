@@ -29,19 +29,19 @@
         <span class="flex flex-row borders border-black ">
             <div>
                 Sign Bit <br>
-                <input id="signBit" readonly/>
+                <input id="signBit" readonly/><button onclick="copyToClipboard('signBit')">Copy</button>
             </div> 
             <div>
                 Exponent Bits <br>
-                <input id="exponentBits" readonly/>
+                <input id="exponentBits" readonly/><button onclick="copyToClipboard('exponentBits')">Copy</button>
             </div>     
             <div>
                 Mantissa Bits <br>
-                <input id="mantissaBits" readonly/>
+                <input id="mantissaBits" readonly/><button onclick="copyToClipboard('mantissaBits')">Copy</button>
             </div>
         </span>
         <h3>Hexadecimal Result</h3> 
-        <input id="hexResult" readonly/>
+        <input id="hexResult" readonly/><button onclick="copyToClipboard('hexResult')">Copy</button>
     </div>
     <script>var exports = {};</script>
     <script src="/scripts/main.js"></script>
