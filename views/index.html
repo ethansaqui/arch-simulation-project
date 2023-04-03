@@ -48,19 +48,23 @@
                     <span>
                         Sign Bit <br>
                         <input id="signBit" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0" readonly />
+                        <button onclick="copyToClipboard('signBit')">Copy</button>
                     </span>
                     <span>
                         Exponent Bits <br>
                         <input id="exponentBits" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0" readonly />
+                        <button onclick="copyToClipboard('exponentBits')">Copy</button>
                     </span>
                     <span>
                         Mantissa Bits <br>
                         <input id="mantissaBits" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0" readonly />
+                        <button onclick="copyToClipboard('mantissaBits')">Copy</button>
                     </span>
                 </div>
                
                 <h3>Hexadecimal Result</h3>
                 <input id="hexResult" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0" readonly />
+                <button onclick="copyToClipboard('hexResult')">Copy</button>
             </div>
         </div>
     </div>
