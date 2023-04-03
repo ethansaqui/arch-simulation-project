@@ -1,49 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/output.css" rel="stylesheet">
     <title>Simulation</title>
-    
-</head>
-<body id="app" class="">
-    <h1>IEEE-754 Binary-64 Floating-Point Converter</h1>
-    <h2 id="inputText">Input</h2>
-    <span>
-        <input type="number" id="binaryInput" placeholder="Enter a binary mantissa" inputmode="numeric">
-        x
-        <select id="baseSelect" class="baseSelect">
-            <option value="2">2</option>
-            <option value="10">10</option>
-            <option value="0">NaN</option>
-        </select>
-        <input type="" id="exponentInput" placeholder="Enter an exponent" inputmode="numeric">
-    </span>
-    <button id="convertButton" type="submit">Convert</button>
 
-    <h2 id="outputText">Output</h2>
-    <div>
-        <h3>Binary Result</h3>
-        <span class="flex flex-row borders border-black ">
+</head>
+
+<body id="app" class="bg-[#111016] text-white font-sans">
+    <div class="text-center text-white">
+        <h1 class="">IEEE-754 Binary-64 Floating-Point Converter</h1>
+
+    </div>
+
+
+    <div class="content-center text-center">
+        <div class="bg-[#222034] pt-2 pb-5">
+            <h2 id="inputText" class="relative mb-1 right-[200px]">Input</h2>
+            <span class="self-center relative content-center">
+                <input type="text" id="binaryInput" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0"
+                    placeholder="Enter a binary mantissa" inputmode="numeric">
+                x
+                <select id="baseSelect" class="baseSelect rounded-md border-[#2d1fa6] p-2 m-0 focus:outline-none">
+                    <option value="2">2</option>
+                    <option value="10">10</option>
+                    <option value="0">NaN</option>
+                </select>
+                <input type="" id="exponentInput" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0"
+                    placeholder="Enter an exponent" inputmode="numeric">
+                <br>
+                <button id="convertButton" class="left-[200px] p-2.5 relative rounded-md bg-[#2d1fa6] text-white m-1 "
+                    type="submit">Convert</button>
+            </span>
+        </div>
+    </div>
+    <div class="m-10"></div>
+    <div class="text-center content-center justify-center">
+        <div class="bg-[#222034] pt-2 pb-14">
+            <h2 id="outputText">Output</h2>
             <div>
-                Sign Bit <br>
-                <input id="signBit" readonly/>
-            </div> 
-            <div>
-                Exponent Bits <br>
-                <input id="exponentBits" readonly/>
-            </div>     
-            <div>
-                Mantissa Bits <br>
-                <input id="mantissaBits" readonly/>
+                <h3>Binary Result</h3>
+                
+                <div class="flex flex-auto justify-center">
+                    <span>
+                        Sign Bit <br>
+                        <input id="signBit" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0" readonly />
+                    </span>
+                    <span>
+                        Exponent Bits <br>
+                        <input id="exponentBits" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0" readonly />
+                    </span>
+                    <span>
+                        Mantissa Bits <br>
+                        <input id="mantissaBits" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0" readonly />
+                    </span>
+                </div>
+               
+                <h3>Hexadecimal Result</h3>
+                <input id="hexResult" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0" readonly />
             </div>
-        </span>
-        <h3>Hexadecimal Result</h3> 
-        <input id="hexResult" readonly/>
+        </div>
+    </div>
+    <div class="bg-[#222034] p-3 mt-10 text-center" >
+        <h3 class="m-1">Ethan Jared Saquilayan</h3>
+        <h3 class="m-1">Joaquin Dela Rosa</h3>
+        <h3 class="m-1">Lance Tan</h3>
+        <h3 class="m-1">Kyle Lim</h3>
     </div>
     <script>var exports = {};</script>
     <script src="/scripts/main.js"></script>
 </body>
+
 </html>
