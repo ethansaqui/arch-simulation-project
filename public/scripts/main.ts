@@ -275,10 +275,10 @@ export default function convertToFloat64(mantissa : string, exponent : string, b
     return "0";
 }
 
-function copyToClipboard(source : string) {
-    const sourceText = document.getElementById(source) as HTMLInputElement;
+export function copyHex() {
+    const sourceText = document.getElementById("hexResult") as HTMLInputElement;
 
-    navigator.clipboard.writeText(sourceText.innerText)
+    navigator.clipboard.writeText(sourceText.value)
       .then(() => {
         console.log('Text copied to clipboard');
       })
@@ -286,3 +286,19 @@ function copyToClipboard(source : string) {
         console.error('Error copying text: ', err);
       });
   }
+
+export function copyResult() {
+    const signBit = document.getElementById("signBit") as HTMLInputElement;
+    const exponentBits = document.getElementById("exponentBits") as HTMLInputElement;
+    const mantissaBits = document.getElementById("mantissaBits") as HTMLInputElement;
+
+    let sourceText = signBit.value + " " + exponentBits.value + " " + mantissaBits.value;
+
+    navigator.clipboard.writeText(sourceText)
+      .then(() => {
+        console.log('Text copied to clipboard');
+      })
+      .catch(err => {
+        console.error('Error copying text: ', err);
+    });
+}
