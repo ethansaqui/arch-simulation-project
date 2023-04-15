@@ -279,13 +279,13 @@ export function copyHex() {
     const sourceText = document.getElementById("hexResult") as HTMLInputElement;
 
     navigator.clipboard.writeText(sourceText.value)
-      .then(() => {
-        console.log('Text copied to clipboard');
-      })
-      .catch(err => {
-        console.error('Error copying text: ', err);
-      });
-  }
+    .then(() => {
+      console.log('Text copied to clipboard');
+    })
+    .catch(err => {
+      console.error('Error copying text: ', err);
+    });
+}
 
 export function copyResult() {
     const signBit = document.getElementById("signBit") as HTMLInputElement;
