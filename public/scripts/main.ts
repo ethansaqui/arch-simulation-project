@@ -21,10 +21,14 @@ function changeReadOnlyValue(value : boolean) {
 
 function handleBaseSelectChange() {
     changeReadOnlyValue(false);
-    if(baseSelect.value == '2')
+    if(baseSelect.value == '2'){
         binaryInput.placeholder="Enter a binary mantissa"
-    else if(baseSelect.value == '10')
+        exponentInput.placeholder="Enter an exponent"
+    }
+    else if(baseSelect.value == '10') {
         binaryInput.placeholder="Enter a decimal mantissa"
+        exponentInput.placeholder="Enter an exponent"
+    }
     else {
         binaryInput.placeholder="NaN"
         exponentInput.placeholder="NaN"
