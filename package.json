@@ -9,7 +9,7 @@
     "start": "tsc && node dist/index.js",
     "dev": "tsc && nodemon dist/index.js",
     "build": "tsc",
-    "postbuild": "copy index.html dist/views",
+    "postbuild": "cp index.html dist/views",
     "vercel": "vercel deploy",
     "vdev": "tsc && vercel dev --listen 3000"
   },
