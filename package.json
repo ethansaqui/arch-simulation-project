@@ -8,7 +8,7 @@
     "tw": "npx tailwindcss -i ./public/css/main.css -o ./dist/public/css/output.css --watch",
     "start": "tsc && node dist/index.js",
     "dev": "tsc && nodemon dist/index.js",
-    "build": "tsc && vercel"
+    "build": "tsc"
   },
   "author": "",
   "license": "ISC",
