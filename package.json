@@ -5,11 +5,11 @@
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tw": "npx tailwindcss -i ./public/css/main.css -o ./dist/public/css/output.css --watch",
+    "tw": "npx tailwindcss -i ./public/css/main.css -o ./dist/public/css/output.css",
     "start": "tsc && node dist/index.js",
     "dev": "tsc && nodemon dist/index.js",
-    "build": "tsc",
-    "postbuild": "cp index.html dist/views",
+    "build": "tsc && npm run tw",
+    "postbuild": "cp index.html dist",
     "vercel": "vercel deploy",
     "vdev": "tsc && vercel dev --listen 3000"
   },
