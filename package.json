@@ -4,14 +4,9 @@
   "description": "A simulation project in partial completion of the CSARCH2 class",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "tw": "npx tailwindcss -i ./public/css/main.css -o ./dist/public/css/output.css",
-    "start": "tsc && node dist/index.js",
-    "dev": "tsc && nodemon dist/index.js",
     "build": "tsc && npm run tw",
-    "postbuild": "cp index.html dist",
-    "vercel": "vercel deploy",
-    "vdev": "tsc && vercel dev --listen 3000"
+    "postbuild": "cp index.html dist"
   },
   "author": "",
   "license": "ISC",
