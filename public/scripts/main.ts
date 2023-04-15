@@ -1,3 +1,5 @@
+import e from "express";
+
 interface FloatingPoint {
     sign : string;
     exponent : string;
@@ -25,7 +27,11 @@ function handleBaseSelectChange() {
         binaryInput.placeholder="Enter a decimal mantissa"
     else {
         binaryInput.placeholder="NaN"
+        exponentInput.placeholder="NaN"
+        binaryInput.value = "";
+        exponentInput.value = "";
         changeReadOnlyValue(true);
+
     }   
 }
 
@@ -85,6 +91,7 @@ function convertDecimalToBinary(input: FloatingPoint) : FloatingPoint {
     // separate mantissa into 2 parts: 1 after the decimal point and 1 before the decimal point
     const mantissaParts = normalizedMantissa.split('.');
     console.log(mantissaParts)
+
     const beforeDecimalPoint = mantissaParts[0];
     const afterDecimalPoint = mantissaParts[1];
 
@@ -238,8 +245,14 @@ function handleSpecialCases(result : FloatingPoint) : FloatingPoint {
     return result;
 }
 
+function cutNegativeSign (value : string) : string {
+    return value.slice(1);
+}
+
+
 export default function convertToFloat64(mantissa : string, exponent : string, base : number) : string {
     const sign = extractSign(binaryInput.value);
+
 
     console.log(
         "Sign: " + sign + "\n" +
@@ -257,6 +270,9 @@ export default function convertToFloat64(mantissa : string, exponent : string, b
     if(input.mantissa.indexOf('.') == -1) {
         input.mantissa += ".0";
     }
+
+    if (sign == "1")
+        input.mantissa = cutNegativeSign(input.mantissa);
 
     var result : FloatingPoint;
     if (base == 2)

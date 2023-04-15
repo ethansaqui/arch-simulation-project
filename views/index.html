@@ -21,18 +21,19 @@
         <div class="bg-[#222034] pt-2 pb-5">
             <h2 id="inputText" class="relative mb-1 right-[200px]">Input</h2>
             <span class="self-center relative content-center">
-                <input type="text" id="binaryInput" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0"
-                    placeholder="Enter a binary mantissa" inputmode="numeric">
+                <input type="text" id="binaryInput" class="rounded-md border-2 p-2.5 m-0"
+                    placeholder="Enter a binary mantissa" inputmode="numeric"
+                    pattern="/10\./i">
                 x
-                <select id="baseSelect" class="baseSelect rounded-md border-[#2d1fa6] p-2 m-0 focus:outline-none">
+                <select id="baseSelect" class="baseSelect rounded-md p-2 m-0 focus:outline-none">
                     <option value="2">2</option>
                     <option value="10">10</option>
                     <option value="0">NaN</option>
                 </select>
-                <input type="" id="exponentInput" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0"
+                <input type="" id="exponentInput" class="rounded-md border-2  p-2.5 m-0"
                     placeholder="Enter an exponent" inputmode="numeric">
                 <br>
-                <button id="convertButton" class="left-[200px] p-2.5 relative rounded-md bg-[#2d1fa6] text-white m-1 "
+                <button id="convertButton" class="left-[200px] p-2.5 relative rounded-md bg-[#2d1fa6] text-white m-1 border-none"
                     type="submit">Convert</button>
             </span>
         </div>
@@ -44,24 +45,24 @@
             <div>
                 <h3>Binary Result</h3>
                 
-                <div class="flex flex-auto justify-center">
+                <div class="flex justify-center gap-0">
                     <span>
                         Sign Bit <br>
-                        <input id="signBit" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0" readonly />
+                        <input id="signBit" class="w-2 rounded-md border-2 p-2.5 m-0" readonly />
                     </span>
                     <span>
                         Exponent Bits <br>
-                        <input id="exponentBits" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0" readonly />
+                        <input id="exponentBits" class="rounded-md border-2 p-2.5 m-0" readonly />
                     </span>
                     <span>
                         Mantissa Bits <br>
-                        <input id="mantissaBits" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0" readonly />
+                        <input id="mantissaBits" class="flex-1 rounded-md border-2 p-2.5 m-0 border-blue-200 w-[29em]" readonly />
                     </span>
                 </div>
-                <button onclick="copyResult()">Copy</button>
+                <button onclick="copyResult()" class="p-2.5 relative rounded-md bg-[#2d1fa6] text-white m-1 border-none">Copy</button>
                 <h3>Hexadecimal Result</h3>
-                <input id="hexResult" class="rounded-md border-2 border-[#2d1fa6] p-2.5 m-0" readonly />
-                <input id="hexResult" readonly/><button onclick="copyHex()">Copy</button>
+                <input id="hexResult" class="rounded-md border-2  p-2.5 m-0" readonly />
+                <button onclick="copyHex()" class="p-2.5 relative rounded-md bg-[#2d1fa6] text-white m-1 border-none">Copy</button>
             </div>
         </div>
     </div>
