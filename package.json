@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "tw": "npx tailwindcss -i ./public/css/main.css -o ./dist/public/css/output.css --watch",
     "start": "tsc && node dist/index.js",
-    "dev": "tsc && nodemon dist/index.js"
+    "dev": "tsc && nodemon dist/index.js",
+    "build": "tsc && vercel"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +20,7 @@
   },
   "dependencies": {
     "@types/node": "^18.15.10",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "vercel": "^28.18.5"
   }
 }
