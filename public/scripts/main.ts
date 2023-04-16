@@ -83,25 +83,25 @@ function normalizeDecimalPoint(mantissa: string, exponent: string) : string {
 
     var resultArr = result.split('');
     resultArr.splice(newRadixPointPosition, 0, '.');
-    console.log(resultArr.join(''))
     return resultArr.join('');
 }
 
 function convertDecimalToBinary(input: FloatingPoint) : FloatingPoint {
     const mantissa = input.mantissa;
-    const exponent = input.exponent;
+    // Change to base 2 using change of base 
+    let exponent= input.exponent
 
     const normalizedMantissa = normalizeDecimalPoint(mantissa, exponent);
     // separate mantissa into 2 parts: 1 after the decimal point and 1 before the decimal point
     const mantissaParts = normalizedMantissa.split('.');
-    console.log(mantissaParts)
 
     const beforeDecimalPoint = mantissaParts[0];
     const afterDecimalPoint = mantissaParts[1];
 
     // convert the after decimal point part to binary as a fraction
     var afterDecimalPointBinary = "";
-    var afterDecimalPointValue = parseInt(afterDecimalPoint) / Math.pow(10, afterDecimalPoint.length);
+    var afterDecimalPointValue = parseInt(afterDecimalPoint) / Math.pow(10, afterDecimalPoint.length - 1);
+    afterDecimalPointValue /= 10.0;
 
     while(afterDecimalPointValue > 0) {
         afterDecimalPointValue *= 2;
@@ -123,7 +123,7 @@ function convertDecimalToBinary(input: FloatingPoint) : FloatingPoint {
 
     // combine the 2 parts
     var result = beforeDecimalPointBinary + "." + afterDecimalPointBinary;
-   
+
     return {sign: input.sign,
             exponent: "0",
             mantissa: result,
@@ -131,9 +131,7 @@ function convertDecimalToBinary(input: FloatingPoint) : FloatingPoint {
 }
 
 function convertExponentToBinary(value: string) : string {
-    console.log(parseInt(value))
     var result = parseInt(value) + 1023;
-    console.log(result)
     var binary = result.toString(2);
     while(binary.length < 11) {
         binary = "0" + binary;
@@ -256,14 +254,6 @@ function cutNegativeSign (value : string) : string {
 
 export default function convertToFloat64(mantissa : string, exponent : string, base : number) : string {
     const sign = extractSign(binaryInput.value);
-
-
-    console.log(
-        "Sign: " + sign + "\n" +
-        "Mantissa: " + mantissa + "\n" +
-        "Exponent: " + exponent + "\n" +
-        "Base: " + base + "\n"
-    )
     const input = {
         sign: sign,
         mantissa: mantissa,
