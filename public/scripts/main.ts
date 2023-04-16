@@ -59,12 +59,12 @@ function extractSign(mantissa : string) : string {
 
 function normalizeDecimalPoint(mantissa: string, exponent: string) : string {
 // shift decimal point based on exponent
-    var result = mantissa;
+    let result = mantissa;
     const originalRadixPointPosition = result.indexOf('.');
-    var newRadixPointPosition = Math.max(originalRadixPointPosition + parseInt(exponent), 0);
-    var exponentValue = parseInt(exponent);
-    var resLength = result.length;
-    var resArray = result.split(''); // 1, 0, . , 2
+    let newRadixPointPosition = Math.max(originalRadixPointPosition + parseInt(exponent), 0);
+    let exponentValue = parseInt(exponent);
+    let resLength = result.length;
+    let resArray = result.split(''); // 1, 0, . , 2
     resArray.splice(originalRadixPointPosition, 1);
     result = resArray.join('');
 
@@ -90,13 +90,14 @@ function convertDecimalToBinary(input: FloatingPoint) : FloatingPoint {
     const mantissa = input.mantissa;
     // Change to base 2 using change of base 
     let exponent= input.exponent
-
     const normalizedMantissa = normalizeDecimalPoint(mantissa, exponent);
     // separate mantissa into 2 parts: 1 after the decimal point and 1 before the decimal point
     const mantissaParts = normalizedMantissa.split('.');
 
     const beforeDecimalPoint = mantissaParts[0];
     const afterDecimalPoint = mantissaParts[1];
+
+    let exponentValue = "0";
 
     // convert the after decimal point part to binary as a fraction
     var afterDecimalPointBinary = "";
@@ -117,16 +118,27 @@ function convertDecimalToBinary(input: FloatingPoint) : FloatingPoint {
     // convert the before decimal point part to binary
     var beforeDecimalPointBinary = "";
     var beforeDecimalPointValue = parseInt(beforeDecimalPoint);
-    while(beforeDecimalPointValue > 0) {
-        beforeDecimalPointBinary = (beforeDecimalPointValue % 2).toString() + beforeDecimalPointBinary;
-        beforeDecimalPointValue = Math.floor(beforeDecimalPointValue / 2);
+    
+    if  (beforeDecimalPointValue == Infinity) {
+        beforeDecimalPointBinary = "1";
+        var ctr = 0;
+        exponentValue = "1023";
+        while(ctr < 52) {
+            beforeDecimalPointBinary += "0";
+            ctr++;
+        }
+    } else {
+        while(beforeDecimalPointValue > 0) {
+            beforeDecimalPointBinary = (beforeDecimalPointValue % 2).toString() + beforeDecimalPointBinary;
+            beforeDecimalPointValue = Math.floor(beforeDecimalPointValue / 2);
+        }
     }
 
     // combine the 2 parts
     var result = beforeDecimalPointBinary + "." + afterDecimalPointBinary;
 
     return {sign: input.sign,
-            exponent: "0",
+            exponent: exponentValue,
             mantissa: result,
             base: input.base} as FloatingPoint;
 }
