@@ -265,7 +265,7 @@ function cutNegativeSign (value : string) : string {
 }
 
 
-export default function convertToFloat64(mantissa : string, exponent : string, base : number) : string {
+export default function convertToFloat64(mantissa : string, exponent : string, base : number) {
     const sign = extractSign(binaryInput.value);
     const input = {
         sign: sign,
@@ -295,7 +295,6 @@ export default function convertToFloat64(mantissa : string, exponent : string, b
     result.exponent = convertExponentToBinary(result.exponent);
     displayResults(result);
 
-    return "0";
 }
 
 export function copyHex() {
