@@ -6,7 +6,9 @@
   "scripts": {
     "tw": "npx tailwindcss -i ./public/css/main.css -o ./dist/public/css/output.css",
     "build": "tsc && npm run tw",
-    "postbuild": "cp index.html dist"
+    "postbuild": "cp index.html dist",
+    "dev": "tsc && npm run tw && npm run postdev",
+    "postdev": "copy index.html dist"
   },
   "author": "",
   "license": "ISC",
