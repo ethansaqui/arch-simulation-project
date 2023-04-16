@@ -100,8 +100,9 @@ function convertDecimalToBinary(input: FloatingPoint) : FloatingPoint {
 
     // convert the after decimal point part to binary as a fraction
     var afterDecimalPointBinary = "";
-    var afterDecimalPointValue = parseInt(afterDecimalPoint) / Math.pow(10, afterDecimalPoint.length - 1);
-    afterDecimalPointValue /= 10.0;
+    
+    var afterDecimalPointValue = parseInt(afterDecimalPoint) / Math.pow(10, Math.ceil(afterDecimalPoint.length / 2));
+    afterDecimalPointValue /= Math.pow(10, afterDecimalPoint.length - Math.ceil(afterDecimalPoint.length / 2))
 
     while(afterDecimalPointValue > 0) {
         afterDecimalPointValue *= 2;
@@ -150,21 +151,21 @@ function normalizeBinaryMantissa(input : FloatingPoint) : FloatingPoint {
 
         exponent = (parseInt(exponent) + (radixPointPosition - firstOnePosition)).toString();
     }
-    else
+    else {
         exponent = (parseInt(exponent) - (firstOnePosition - radixPointPosition)).toString();
-        
+    }
 
     var result = mantissa.split('');
     result.splice(radixPointPosition, 1);
     result.splice(firstOnePosition, 0, '.');
     result.splice(0, firstOnePosition - 1);
     if(result.length > 53) {
-        result = result.slice(0, 53);
+        result = result.slice(0, 54);
     }
     
     mantissa = result.join('');
 
-    while(mantissa.length < 54) {    
+    while(mantissa.length <= 53) {    
         mantissa += "0";
     }
 
