@@ -197,6 +197,8 @@ function splitToNibbles(value : string) : Array<string> {
 
 function convertToHex(float64 : string) : string {
     var result = splitToNibbles(float64)
+    result = result.slice(0, 16)
+
     return "0x" + result.map((nibble) => parseInt(nibble, 2).toString(16)).join('').toUpperCase();
 }
 
@@ -291,7 +293,6 @@ export default function convertToFloat64(mantissa : string, exponent : string, b
 
     result = normalizeBinaryMantissa(result);
     result = handleSpecialCases(result);
-    console.log(result);
     result.exponent = convertExponentToBinary(result.exponent);
     displayResults(result);
 
