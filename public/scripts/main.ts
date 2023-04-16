@@ -230,7 +230,7 @@ function handleSpecialCases(result : FloatingPoint) : FloatingPoint {
     }
 
     // Case 2: Denormalized
-    else if (parseInt(result.exponent) < -1023) {
+    else if (parseInt(result.exponent) <= -1023) {
         result = denormalizeMantissa(result);
     }
 
