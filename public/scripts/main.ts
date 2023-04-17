@@ -161,7 +161,7 @@ function normalizeBinaryMantissa(input : FloatingPoint) : FloatingPoint {
 
     // Find the radix point in the mantissa
     var radixPointIndex = mantissa.indexOf('.');
-
+    var offset = radixPointIndex - firstOneIndex;
 
     // Remove any leading zeros
     mantissa = mantissa.slice(firstOneIndex);
@@ -170,7 +170,8 @@ function normalizeBinaryMantissa(input : FloatingPoint) : FloatingPoint {
     if (firstOneIndex < 0) {
         mantissa = "0." + mantissa;
     }
-    else if(radixPointIndex < firstOneIndex) {
+    else {
+        mantissa = mantissa.replace('.', '');
         mantissa = mantissa.slice(0, 1) + "." + mantissa.slice(1);
     }
     
@@ -179,8 +180,10 @@ function normalizeBinaryMantissa(input : FloatingPoint) : FloatingPoint {
         mantissa += "0";
     }
 
+    console.log("Hello", mantissa);
+
     // Shift the exponent appropriately
-    exponent = (parseInt(exponent) - firstOneIndex).toString();
+    exponent = (parseInt(exponent) - offset).toString();
 
     return {sign: input.sign, 
             exponent: exponent, 
