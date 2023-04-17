@@ -161,7 +161,11 @@ function normalizeBinaryMantissa(input : FloatingPoint) : FloatingPoint {
 
     // Find the radix point in the mantissa
     var radixPointIndex = mantissa.indexOf('.');
-    var offset = radixPointIndex - firstOneIndex;
+    if (radixPointIndex == -1) {
+        radixPointIndex = mantissa.length;
+    }
+
+    var offset = radixPointIndex - firstOneIndex - 1;
 
     // Remove any leading zeros
     mantissa = mantissa.slice(firstOneIndex);
@@ -174,7 +178,7 @@ function normalizeBinaryMantissa(input : FloatingPoint) : FloatingPoint {
         mantissa = mantissa.replace('.', '');
         mantissa = mantissa.slice(0, 1) + "." + mantissa.slice(1);
     }
-    
+
     // Pad the mantissa to fit 52 bits + the characters "1."
     while(mantissa.length < 54) {
         mantissa += "0";
