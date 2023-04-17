@@ -162,11 +162,15 @@ function normalizeBinaryMantissa(input : FloatingPoint) : FloatingPoint {
     // Find the radix point in the mantissa
     var radixPointIndex = mantissa.indexOf('.');
 
+
     // Remove any leading zeros
     mantissa = mantissa.slice(firstOneIndex);
 
     // Add back the radix point if it was removed
-    if(radixPointIndex < firstOneIndex) {
+    if (firstOneIndex < 0) {
+        mantissa = "0." + mantissa;
+    }
+    else if(radixPointIndex < firstOneIndex) {
         mantissa = mantissa.slice(0, 1) + "." + mantissa.slice(1);
     }
     
