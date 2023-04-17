@@ -155,31 +155,28 @@ function convertExponentToBinary(value: string) : string {
 function normalizeBinaryMantissa(input : FloatingPoint) : FloatingPoint {
     var mantissa = input.mantissa;
     var exponent = input.exponent;
-    var firstOnePosition = mantissa.indexOf('1');
-    const radixPointPosition = mantissa.indexOf('.');
 
-    if(firstOnePosition < radixPointPosition) {
-        firstOnePosition++;
+    // Find the first one in the mantissa
+    var firstOneIndex = mantissa.indexOf('1');
 
-        exponent = (parseInt(exponent) + (radixPointPosition - firstOnePosition)).toString();
-    }
-    else {
-        exponent = (parseInt(exponent) - (firstOnePosition - radixPointPosition)).toString();
-    }
+    // Find the radix point in the mantissa
+    var radixPointIndex = mantissa.indexOf('.');
 
-    var result = mantissa.split('');
-    result.splice(radixPointPosition, 1);
-    result.splice(firstOnePosition, 0, '.');
-    result.splice(0, firstOnePosition - 1);
-    if(result.length > 53) {
-        result = result.slice(0, 54);
+    // Remove any leading zeros
+    mantissa = mantissa.slice(firstOneIndex);
+
+    // Add back the radix point if it was removed
+    if(radixPointIndex < firstOneIndex) {
+        mantissa = mantissa.slice(0, 1) + "." + mantissa.slice(1);
     }
     
-    mantissa = result.join('');
-
-    while(mantissa.length <= 53) {    
+    // Pad the mantissa to fit 52 bits + the characters "1."
+    while(mantissa.length < 54) {
         mantissa += "0";
     }
+
+    // Shift the exponent appropriately
+    exponent = (parseInt(exponent) - firstOneIndex).toString();
 
     return {sign: input.sign, 
             exponent: exponent, 
@@ -280,17 +277,20 @@ export default function convertToFloat64(mantissa : string, exponent : string, b
         input.mantissa += ".0";
     }
 
-    if (sign == "1")
+    if (sign == "1") {
         input.mantissa = cutNegativeSign(input.mantissa);
+    }
 
     var result : FloatingPoint;
-    if (base == 2)
+    if (base == 2) {
         result = normalizeBinaryMantissa(input);
-    else if (base == 10) 
+    }
+    else if (base == 10) {
         result = convertDecimalToBinary(input);
-    else
+    }
+    else {
         result = {sign: "0", mantissa: "0", exponent: "0", base: NaN} as FloatingPoint;
-
+    }
     result = normalizeBinaryMantissa(result);
     result = handleSpecialCases(result);
     result.exponent = convertExponentToBinary(result.exponent);
@@ -298,7 +298,7 @@ export default function convertToFloat64(mantissa : string, exponent : string, b
     // Make sure everything is the correct length
     result.sign = result.sign.slice(0, 1);
     result.exponent = result.exponent.slice(0, 11);
-    result.mantissa = result.mantissa.slice(0, 53);
+    result.mantissa = result.mantissa.slice(0, 54);
     
     displayResults(result);
 
