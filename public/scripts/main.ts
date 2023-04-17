@@ -179,6 +179,7 @@ function normalizeBinaryMantissa(input : FloatingPoint) : FloatingPoint {
 
     // Add back the radix point if it was removed
     if (firstOneIndex < 0) {
+        mantissa = mantissa.replace('.', '');
         mantissa = "0." + mantissa;
     }
     else {
@@ -191,7 +192,7 @@ function normalizeBinaryMantissa(input : FloatingPoint) : FloatingPoint {
         mantissa += "0";
     }
 
-    console.log("Hello", mantissa);
+
 
 
     return {sign: input.sign, 
